@@ -17,6 +17,7 @@ services:
   # Frontend Static Site
   - type: web
     name: emotion-analyzer-frontend
+    runtime: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/build
     envVars:
