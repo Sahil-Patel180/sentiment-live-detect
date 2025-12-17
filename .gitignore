@@ -1,0 +1,47 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+frontend/.env
+frontend/.env.local
+
+# Logs
+*.log
+
+# Node modules (for frontend)
+node_modules/
+frontend/node_modules/
+frontend/build/
+
+# Model files - Keep in repo for now
+# Uncomment to exclude if using external storage
+# backend/models/*.keras
+# backend/models/*.pkl
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
