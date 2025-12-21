@@ -7,7 +7,20 @@ import pickle
 import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for React frontend
+
+# Configure CORS to allow requests from your frontend
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://emotion-analyzer-frontend.onrender.com",
+            "http://localhost:3000",
+            "http://localhost:3001"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Load the trained model and preprocessing tools
 model = None
@@ -47,9 +60,14 @@ def health():
         "model_loaded": model is not None
     })
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     try:
+        print(f"Received request from: {request.origin}")
         data = request.get_json()
         
         if not data or 'text' not in data:
@@ -59,6 +77,10 @@ def predict():
         
         if not input_text.strip():
             return jsonify({"error": "Empty text provided"}), 400
+        
+        # Check if model is loaded
+        if model is None or tokenizer is None or lb is None:
+            return jsonify({"error": "Model not loaded"}), 503
         
         # Preprocess the input
         max_sequence_length = 100
@@ -92,6 +114,7 @@ def predict():
         })
     
     except Exception as e:
+        print(f"Error in prediction: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
